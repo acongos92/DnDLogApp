@@ -1,0 +1,5 @@
+<%= form_for :generate_log, url: "single_log_controller/generate" do |form| %>
+  <%= form.label :characterName, 'Enter your character\'s name:' %>
+  <%= form.text_field :characterName %>
+  <%= form.submit 'Generate Log' %>
+<% end  %>
