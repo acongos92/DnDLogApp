@@ -212,7 +212,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mechanize
-  pg
+  pg (= 1.0.0)
   rails (= 5.0.2)
   rails_12factor (= 0.0.2)
   sass-rails (~> 5.0)
