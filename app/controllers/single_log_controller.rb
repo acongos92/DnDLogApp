@@ -4,6 +4,7 @@ class SingleLogController < ApplicationController
   # form display
   #
   def display()
+    @character = Character.find(params[:id])
     render 'characterStandalone/form'
   end
 
@@ -21,6 +22,7 @@ class SingleLogController < ApplicationController
       errors.each do |error|
         #this will just display the last error as the flashed error
         flash[:error] = error
+        @character = Character.find(params[:id])
         render 'characterStandalone/form'
       end
     end
@@ -33,8 +35,7 @@ class SingleLogController < ApplicationController
   # get sanitized params
   #
   def form_params()
-    params.require(:generate_log).permit(:characterName, :characterRace, :characterLevel, :characterClass, :questName, :class, :magicItemName,
-                                          :magicItemTp, :magicItemTpNeeded, :gpTotal, :questCpGained, :questTpGained, :questGpGained)
+    params.require(:generate_log).permit(:questName, :questCpGained, :questTpGained, :questGpGained)
   end
 
   private
@@ -43,15 +44,7 @@ class SingleLogController < ApplicationController
   #
   def validate_params(params)
     errors = []
-    if !isIntVal(params[:characterLevel])
-      errors << "Character Level Should be Integer"
-    elsif !isNumericVal(params[:magicItemTp])
-      errors << "magic item tp should be numeric value"
-    elsif !isNumericVal(params[:magicItemTpNeeded])
-      errors << "Tp needed should be numeric value"
-    elsif !isNumericVal(params[:gpTotal])
-      errors << "gp needed should be numeric value"
-    elsif !isNumericVal(params[:questCpGained])
+    if !isNumericVal(params[:questCpGained])
       errors << "quest cp gained needed should be numeric value"
     elsif !isNumericVal(params[:questTpGained])
       errors << "quest tp gained needed should be numeric value"

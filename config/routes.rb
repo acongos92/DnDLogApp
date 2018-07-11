@@ -7,7 +7,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'characters#index', as: :home
-  post 'single_log/generate', as: :generate_log
+  get 'single_log/:id/display' => 'single_log#display', as: :new_quest
+  post 'single_log/:id/generate' => 'single_log#generate', as: :generate_log
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
