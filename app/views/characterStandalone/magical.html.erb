@@ -1,0 +1,9 @@
+<div>
+  <p>Congratulations! you get your current magical Item, input next item info</p>
+</div>
+<%= form_for :magic_item, url: :build_magic_item do |form| %>
+  <div class ="form-group">
+    <%= form.label :magicItemName, 'Enter magic item name' %>
+    <%= form.text_field :magicItemName, :class => "form-control", :required => true%>
+  </div>
+<% end %>

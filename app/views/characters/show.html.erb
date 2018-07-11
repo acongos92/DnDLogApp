@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @character.name %>
+</p>
+
+<p>
+  <strong>Race:</strong>
+  <%= @character.race %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @character.level %>
+</p>
+
+<p>
+  <strong>Cp:</strong>
+  <%= @character.cp %>
+</p>
+
+<p>
+  <strong>Gp:</strong>
+  <%= @character.gp %>
+</p>
+<p class="h2">Your Items</p>
+
+<table class="table table-dark">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Cost</th>
+  </tr>
+  </thead>
+  <tbody>
+<% @items.each do |item| %>
+    <tr>
+      <td><%=item.name %></td>
+      <td><%=item.cost %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<p class="h2">Your Magic Item</p>
+<table class="table table-dark">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Cost</th>
+  </tr>
+  </thead>
+  <tbody>
+<% @magicItems.each do |item| %>
+  <tr>
+    <td>Item Name: <%= item.name %></td>
+    <td>Item TP: <%= item.tp %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<%= link_to 'Edit', edit_character_path(@character), :class => "btn btn-outline-dark" %>
+<%= link_to 'Back', characters_path, :class => "btn btn-outline-dark" %>

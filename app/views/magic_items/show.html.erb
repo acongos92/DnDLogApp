@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @magic_item.name %>
+</p>
+
+<p>
+  <strong>Tp:</strong>
+  <%= @magic_item.tp %>
+</p>
+
+<p>
+  <strong>Character:</strong>
+  <%= @magic_item.character_id %>
+</p>
+
+<%= link_to 'Edit', edit_magic_item_path(@magic_item) %> |
+<%= link_to 'Back', magic_items_path %>

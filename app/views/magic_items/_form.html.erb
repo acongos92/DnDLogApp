@@ -1,0 +1,32 @@
+<%= form_for(magic_item) do |f| %>
+  <% if magic_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(magic_item.errors.count, "error") %> prohibited this magic_item from being saved:</h2>
+
+      <ul>
+      <% magic_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :tp %>
+    <%= f.text_field :tp %>
+  </div>
+
+  <div class="field">
+    <%= f.label :character_id %>
+    <%= f.number_field :character_id %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

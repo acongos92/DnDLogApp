@@ -1,5 +1,5 @@
 class SingleLogController < ApplicationController
-
+  include ApplicationHelper
   #
   # form display
   #

@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
+  resources :items
+  resources :magic_items
+  resources :characters
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'single_log#display', as: :home
+  root 'characters#index', as: :home
   post 'single_log/generate', as: :generate_log
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
