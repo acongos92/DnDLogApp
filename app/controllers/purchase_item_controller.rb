@@ -16,7 +16,7 @@ class PurchaseItemController < ApplicationController
       @character.save
       redirect_to @character, notice: 'Item Was Purchased succesfully'
     else
-      flash[:errors] = "You Could not afford this item/GP must be numeric value"
+      flash[:errors] = errors[0]
       @item = Item.new(item_params)
       render 'purchase_item/new'
     end
@@ -46,6 +46,10 @@ class PurchaseItemController < ApplicationController
     errors = []
     if !isNumericVal(params[:cost])
       errors << "GP must be numeric value"
+    else
+      if params[:cost].to_f < 0
+        errors << "GP must be a postivie value Nice try though ;)"
+      end
     end
     return errors
   end
