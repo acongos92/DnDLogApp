@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   root 'characters#index', as: :home
   get 'single_log/:id/display' => 'single_log#display', as: :new_quest
   post 'single_log/:id/generate' => 'single_log#generate', as: :generate_log
+
+  #
+  #Standard Item Purchase Routes
+  #
+  get 'purchase/:id' => 'purchase_item#new', as: :purchase_item_form
+  post 'purchase/:id' => 'purchase_item#buy', as: :purchase_item_transaction
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

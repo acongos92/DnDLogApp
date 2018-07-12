@@ -5,6 +5,17 @@ module ApplicationHelper
   #author vict0rem
 
 
+  # Gets numeric input, loops until user inputs only an integer value
+  def isIntVal(val)
+    return /((\d)+)/.match(val) && !/((\d)+\.(\d)+)/.match(val)
+  end
+
+
+  # Gets numeric input, loops until user inputs a float or integer value
+  def isNumericVal(val)
+    return /((\d)+)/.match(val) || /((\d)+\.(\d)+)/.match(val)
+  end
+
 #These defs are made to determine the amount of CP a character needs to level
 #up and if they did level up how much CP they will need for their next level.
   def CP(level)
