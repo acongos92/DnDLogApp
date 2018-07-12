@@ -1,5 +1,5 @@
 class SingleLogController < ApplicationController
-  include ApplicationHelper
+  include LogHelper
   #
   # form display
   #
@@ -14,20 +14,20 @@ class SingleLogController < ApplicationController
   def generate()
     errors = validate_params(form_params)
     if errors.length < 1
-      #build log strings
-      @logs = build_log_strings(form_params)
+      @character = Character.find(params[:id])
+      @logs = buildLogStrings(form_params, @character)
+      updateCharacter(form_params, @character)
       render 'characterStandalone/logPage'
     else
-      #render new and flash errors
       errors.each do |error|
-        #this will just display the last error as the flashed error
         flash[:error] = error
         @character = Character.find(params[:id])
-        render 'characterStandalone/form'
       end
+      render 'characterStandalone/form'
     end
-
   end
+
+
 
 
   private
@@ -70,9 +70,55 @@ class SingleLogController < ApplicationController
   #
   # builds and returns an array of log strings to be output
   #
-  def build_log_strings(params)
+  def buildLogStrings(params, character)
     strings = []
-    strings << "Log Strings gona go here"
+    strings << buildLevelUpString(params, character)
+    strings << buildGpString(params, character)
     return strings
   end
+
+  private
+  #
+  # Builds and return a string which describes how cp gained on a quest will affect character level
+  #
+  def buildLevelUpString(params, character)
+    leveledUp = false
+    newLevel = character.level
+    while doesLevelUp?(params[:questCpGained].to_f, character.cp, newLevel)
+      leveledUp = true
+      newLevel += 1
+    end
+    if leveledUp
+      return "#{character.name} gains #{params[:questCpGained]} CP from #{params[:questName]} and
+              levels up to level #{newLevel}!! (#{character.cp + params[:questCpGained].to_f}/#{getCpNeeded(newLevel + 1)}
+              to level #{newLevel + 1})"
+    else
+      return "#{character.name} gains #{params[:questCpGained]} CP from #{params[:questName]} and
+              remains level #{character.level} (#{character.cp + params[:questCpGained].to_f}/#{getCpNeeded(character.level + 1)}
+              to level #{character.level + 1})"
+    end
+  end
+
+  private
+  #
+  # Builds a string which describes how much gp was gained on a quest
+  #
+  def buildGpString(params, character)
+    return "#{character.name} also gains #{params[:questGpGained]} GP, and
+            now has a total of #{character.gp + params[:questGpGained].to_f} GP"
+  end
+  private
+  #
+  # Updates a characters information stored in database
+  #
+  def updateCharacter(params, character)
+    while doesLevelUp?(params[:questCpGained].to_f, character.cp, character.level)
+      character.level += 1
+    end
+    character.gp += params[:questGpGained].to_f
+    character.cp += params[:questCpGained].to_f
+    character.save
+  end
+
+
 end
