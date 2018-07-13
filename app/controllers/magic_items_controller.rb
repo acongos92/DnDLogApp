@@ -54,6 +54,11 @@ class MagicItemsController < ApplicationController
   # DELETE /magic_items/1
   # DELETE /magic_items/1.json
   def destroy
+    id = @magic_item.id
+    association = CharacterMagicItem.find_by_magic_item_id(id)
+    unless association == nil
+      association.destroy
+    end
     @magic_item.destroy
     respond_to do |format|
       format.html { redirect_to magic_items_url, notice: 'Magic item was successfully destroyed.' }

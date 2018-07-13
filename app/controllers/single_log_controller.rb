@@ -16,7 +16,6 @@ class SingleLogController < ApplicationController
     if errors.length < 1
       @character = Character.find(params[:id])
       @logs = buildLogStrings(form_params, @character)
-      updateCharacter(form_params, @character)
       render 'characterStandalone/logPage'
     else
       errors.each do |error|
@@ -80,22 +79,32 @@ class SingleLogController < ApplicationController
   private
   #
   # Builds and return a string which describes how cp gained on a quest will affect character level
+  # updates character model to reflect these logs
   #
   def buildLevelUpString(params, character)
     leveledUp = false
     newLevel = character.level
-    while doesLevelUp?(params[:questCpGained].to_f, character.cp, newLevel)
+    totalCP = params[:questCpGained].to_f + character.cp
+    while doesLevelUp?(totalCP, newLevel)
       leveledUp = true
       newLevel += 1
+      if newLevel > 6
+        totalCP -= 8
+      else
+        totalCP -= 4
+      end
     end
+    character.cp = totalCP
+    character.level = newLevel
+    character.gp += params[:questGpGained].to_f
+    character.save
     if leveledUp
-      return "#{character.name} gains #{params[:questCpGained]} CP from #{params[:questName]} and
-              levels up to level #{newLevel}!! (#{character.cp + params[:questCpGained].to_f}/#{getCpNeeded(newLevel + 1)}
+      return "#{character.name} gains #{params[:questCpGained]} CP from **#{params[:questName]}** and
+              levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
               to level #{newLevel + 1})"
     else
       return "#{character.name} gains #{params[:questCpGained]} CP from #{params[:questName]} and
-              remains level #{character.level} (#{character.cp + params[:questCpGained].to_f}/#{getCpNeeded(character.level + 1)}
-              to level #{character.level + 1})"
+              remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"
     end
   end
 
@@ -106,18 +115,6 @@ class SingleLogController < ApplicationController
   def buildGpString(params, character)
     return "#{character.name} also gains #{params[:questGpGained]} GP, and
             now has a total of #{character.gp + params[:questGpGained].to_f} GP"
-  end
-  private
-  #
-  # Updates a characters information stored in database
-  #
-  def updateCharacter(params, character)
-    while doesLevelUp?(params[:questCpGained].to_f, character.cp, character.level)
-      character.level += 1
-    end
-    character.gp += params[:questGpGained].to_f
-    character.cp += params[:questCpGained].to_f
-    character.save
   end
 
 

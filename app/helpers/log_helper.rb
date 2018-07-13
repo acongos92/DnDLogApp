@@ -5,9 +5,9 @@ module LogHelper
   #
   def getCpNeeded(level)
     if level <= 5
-      needed = 4 * level
+      needed = 4
     elsif level > 5
-      needed = 20 + (8 * (level - 5))
+      needed = 8
     else
       needed = nil
     end
@@ -17,9 +17,9 @@ module LogHelper
   #
   # Checks if a character has leveled up based on current level, gained cp, and current cp
   #
-  def doesLevelUp?(gained, current, level)
+  def doesLevelUp?(current, level)
     needed = getCpNeeded(level)
-    return (gained + current) >= needed
+    return (current) >= needed
   end
 
 end

@@ -1,0 +1,17 @@
+<p class="h2">Hi <%= @character.name %>, Select your new magic item</p>
+
+<form id="magicItemSelectForm", action="<%= url_for(:purchase_magic_item_transaction) %>" method="post"><%= token_tag %>
+
+  <div class="form-group">
+    <select multiple class="form-control" id="magicItemDropdown" name="magic_item" class="form-control">
+      <% @magic_items.each do |item| %>
+        <option><%= item.name %> || TP <%= item.tp %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="actions">
+    <input type="submit" class="btn btn-primary">
+  </div>
+
+</form>

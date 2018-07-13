@@ -1,0 +1,2 @@
+module CharacterMagicItemHelper
+end

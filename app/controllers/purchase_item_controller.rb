@@ -9,14 +9,18 @@ class PurchaseItemController < ApplicationController
     if errors.length < 1 && canAfford?(item_params[:cost].to_f, @character)
       @character.gp -= item_params[:cost].to_f
       @item = Item.new
-      @item.character = @character
       @item.cost = item_params[:cost]
       @item.name = item_params[:name]
       @item.save
+      association = CharacterItem.new
+      association.character_id = @character.id
+      association.item_id = @item.id
+      association.save
       @character.save
       redirect_to @character, notice: 'Item Was Purchased succesfully'
     else
-      flash[:errors] = errors[0]
+      errors.length > 0 ? flash[:errors] = errors[0] : flash[:errors] = "Whoops! this item costs #{item_params[:cost]} GP
+                                                                         But you have #{@character.gp}"
       @item = Item.new(item_params)
       render 'purchase_item/new'
     end

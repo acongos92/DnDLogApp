@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  tp: 1.5
+  cp: 1.5
+  gp: 1.5
+  character_id: 
+
+two:
+  name: MyString
+  tp: 1.5
+  cp: 1.5
+  gp: 1.5
+  character_id: 

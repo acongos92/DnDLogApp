@@ -13,10 +13,16 @@ Rails.application.routes.draw do
   post 'single_log/:id/generate' => 'single_log#generate', as: :generate_log
 
   #
-  #Standard Item Purchase Routes
+  # Standard Item Purchase Routes
   #
   get 'purchase/:id' => 'purchase_item#new', as: :purchase_item_form
   post 'purchase/:id' => 'purchase_item#buy', as: :purchase_item_transaction
+
+  #
+  # Standalone Magic Item Selection Route
+  #
+  get 'magic_item_select/:id' => 'character_magic_item#show', as: :purchase_magic_item_form
+  post 'magic_item_purchase/:id' => 'character_magic_item#buy', as: :purchase_magic_item_transaction
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

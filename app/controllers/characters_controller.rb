@@ -10,8 +10,8 @@ class CharactersController < ApplicationController
   # GET /characters/1
   # GET /characters/1.json
   def show
-    @items = Item.where(character_id: params[:id]).all
-    @magicItems = MagicItem.where(character_id: params[:id]).all
+    @items = @character.items
+    @magicItems = @character.magic_items
   end
 
   # GET /characters/new

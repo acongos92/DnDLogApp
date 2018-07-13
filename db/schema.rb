@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180711010905) do
+ActiveRecord::Schema.define(version: 20180713001022) do
+
+  create_table "character_items", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "item_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "character_magic_items", force: :cascade do |t|
+    t.integer  "character_id"
+    t.integer  "magic_item_id"
+    t.float    "applied_tp"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
 
   create_table "characters", force: :cascade do |t|
     t.string   "name"
@@ -25,14 +40,22 @@ ActiveRecord::Schema.define(version: 20180711010905) do
   create_table "items", force: :cascade do |t|
     t.string   "name"
     t.float    "cost"
-    t.integer  "character_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "magic_items", force: :cascade do |t|
     t.string   "name"
     t.float    "tp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "quests", force: :cascade do |t|
+    t.string   "name"
+    t.float    "tp"
+    t.float    "cp"
+    t.float    "gp"
     t.integer  "character_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
