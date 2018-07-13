@@ -5,7 +5,7 @@
   <div class="form-group">
     <select multiple class="form-control" id="magicItemDropdown" name="magic_item" class="form-control">
       <% @magic_items.each do |item| %>
-        <option><%= item.name %> || TP <%= item.tp %></option>
+        <option><%= item.name %> || <%= item.tp %> TP</option>
       <% end %>
     </select>
   </div>

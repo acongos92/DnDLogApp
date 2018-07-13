@@ -103,7 +103,7 @@ class SingleLogController < ApplicationController
               levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
               to level #{newLevel + 1})"
     else
-      return "#{character.name} gains #{params[:questCpGained]} CP from #{params[:questName]} and
+      return "#{character.name} gains #{params[:questCpGained]} CP from **#{params[:questName]}** and
               remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"
     end
   end
@@ -113,8 +113,8 @@ class SingleLogController < ApplicationController
   # Builds a string which describes how much gp was gained on a quest
   #
   def buildGpString(params, character)
-    return "#{character.name} also gains #{params[:questGpGained]} GP, and
-            now has a total of #{character.gp + params[:questGpGained].to_f} GP"
+    return "#{character.name} also gains #{params[:questGpGained]} GP and
+            now has a total of #{character.gp} GP"
   end
 
 
