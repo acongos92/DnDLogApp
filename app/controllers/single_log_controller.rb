@@ -1,6 +1,7 @@
 class SingleLogController < ApplicationController
   before_action :set_character
   before_action :set_quest, only: [:generate]
+  before_action :set_magic_items, only:[:show_magic_item_tp_addition_form, :add_tp_to_magic_item]
 
   include LogHelper
   #
@@ -10,13 +11,16 @@ class SingleLogController < ApplicationController
     render 'characterStandalone/form'
   end
 
+  #
+  # checks validity of quest and saves, or displays errors to user
+  #
   def validate_and_save_quest
     errors = validate_params(form_params)
-    if errors.length < 1
-        quest = Quest.new
-        set_quest_params(quest)
-        quest.save
-        redirect_to action: :generate, id: @character.id, quest: quest.id
+    if errors.empty?
+      quest = Quest.new
+      set_quest_params(quest)
+      quest.save
+      redirect_to action: :generate, id: @character.id, quest: quest.id
     else
       errors.each do |error|
         flash[:error] = error
@@ -25,6 +29,26 @@ class SingleLogController < ApplicationController
     end
   end
 
+  #
+  # handles adding new magic item to character during quest logs
+  #
+  def add_magic_item_during_level_up
+
+  end
+  
+  #
+  # handles post request logic around tp addition to magic item
+  #
+  def add_tp_to_magic_item
+
+  end
+
+  #
+  # shows magic items to which tp can be added
+  #
+  def show_magic_item_tp_addition_form
+
+  end
   #
   # log generation controller method
   #
