@@ -1,10 +1,10 @@
 class SingleLogController < ApplicationController
+  before_action :set_character
   include LogHelper
   #
   # form display
   #
   def display()
-    @character = Character.find(params[:id])
     render 'characterStandalone/form'
   end
 
@@ -14,19 +14,19 @@ class SingleLogController < ApplicationController
   def generate()
     errors = validate_params(form_params)
     if errors.length < 1
-      @character = Character.find(params[:id])
       @logs = buildLogStrings(form_params, @character)
       render 'characterStandalone/logPage'
     else
       errors.each do |error|
         flash[:error] = error
-        @character = Character.find(params[:id])
       end
       render 'characterStandalone/form'
     end
   end
 
-
+  def set_character
+    @character = Character.find(params[:id])
+  end
 
 
   private
