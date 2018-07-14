@@ -1,5 +1,5 @@
 <p class="h2">Hi <%= @character.name %>, Lets get your quest info</p>
-<%= form_for :generate_log, url: :generate_log do |form| %>
+<%= form_for :generate_log, url: :validate_and_save_quest do |form| %>
   <div class ="form-group">
     <%= form.label :questName, 'Enter the quest name'%>
     <%= form.text_field :questName, :class => "form-control", :required => true %>

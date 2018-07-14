@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'characters#index', as: :home
   get 'single_log/:id/display' => 'single_log#display', as: :new_quest
-  post 'single_log/:id/generate' => 'single_log#generate', as: :generate_log
+  get 'single_log/:id/:quest/generate' => 'single_log#generate', as: :generate_log
+  post 'single_log/:id/validate' => 'single_log#validate_and_save_quest', as: :validate_and_save_quest
 
   #
   # Standard Item Purchase Routes
