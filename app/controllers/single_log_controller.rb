@@ -20,7 +20,7 @@ class SingleLogController < ApplicationController
       quest = Quest.new
       set_quest_params(quest)
       quest.save
-      redirect_to action: :generate, id: @character.id, quest: quest.id
+      redirect_to action: :show_magic_item_tp_addition, id: @character.id, quest: quest.id
     else
       errors.each do |error|
         flash[:error] = error
@@ -46,8 +46,8 @@ class SingleLogController < ApplicationController
   #
   # shows magic items to which tp can be added
   #
-  def show_magic_item_tp_addition_form
-
+  def show_magic_item_tp_addition
+    render 'characterStandalone/add_tp_to_magic_item'
   end
   #
   # log generation controller method
