@@ -1,1 +1,21 @@
-<p>This ought to render if i understand rails at all</p>
+<p class="h2">Add TP to magic items by typing an amount</p>
+<p class="h3">TP available: <%= @quest.tp %></p>
+
+
+<%= form_for :finish_quest_input, url: :generate_log do |form| %>
+  <% @character_magic_items.each do |item| %>
+    <div class ="form-group">
+      <%= form.label 'item name' %>
+      <%= form.text_field 'name', :class => "form-control", :required => true, :readonly => true, :value => item.magic_item.name %>
+      <%= form.label 'item required TP' %>
+      <%= form.text_field 'tp required', :class => "form-control", :required => true, :readonly => true, :value => item.magic_item.tp %>
+      <%= form.label 'Currently Applied TP' %>
+      <%= form.text_field 'applied tp', :class => "form-control", :required => true, :readonly => true, :value => item.applied_tp %>
+      <%= form.label 'add TP to item'%>
+      <%= form.text_field item.magic_item.name, :required => true, :value => '0.0',  :class => "form-control" %>
+          </div>
+  <% end %>
+  <%= form.submit 'Done Adding TP, Generate Logs', :class => 'btn btn-outline-dark' %>
+<% end %>
+
+

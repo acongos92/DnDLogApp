@@ -1,7 +1,7 @@
 class SingleLogController < ApplicationController
   before_action :set_character
-  before_action :set_quest, only: [:generate]
-  before_action :set_magic_items, only:[:show_magic_item_tp_addition_form, :add_tp_to_magic_item]
+  before_action :set_quest, only: [:generate, :add_magic_item_during_level_up, :add_tp_to_magic_itm, :show_magic_item_tp_addition]
+  before_action :set_magic_items, only:[:show_magic_item_tp_addition, :add_tp_to_magic_item, :generate]
 
   include LogHelper
   #
@@ -47,14 +47,23 @@ class SingleLogController < ApplicationController
   # shows magic items to which tp can be added
   #
   def show_magic_item_tp_addition
+    @character_magic_items = @character.character_magic_items
     render 'characterStandalone/add_tp_to_magic_item'
   end
   #
   # log generation controller method
   #
   def generate
-    @logs = buildLogStrings(@quest, @character)
-    render 'characterStandalone/logPage'
+    errors = validate_magic_item_params(params, @magic_items)
+    spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @magic_items))
+    if errors.empty? && spent_too_much_tp.nil?
+      @logs = buildLogStrings(@quest, @character, params, @magic_items)
+      render 'characterStandalone/logPage'
+    else
+      spent_too_much_tp.nil? ? flash[:error] = errors[0] : flash[:error] = spent_too_much_tp
+      render 'characterStandalone/add_tp_to_magic_item'
+    end
+
   end
 
   def set_character
@@ -69,7 +78,7 @@ class SingleLogController < ApplicationController
     @magic_items = @character.magic_items
   end
 
-  def set_quest_params (questModel)
+  def set_quest_params(questModel)
     questModel.tp = form_params[:questTpGained].to_f
     questModel.cp = form_params[:questCpGained].to_f
     questModel.name = form_params[:questName]
@@ -102,13 +111,27 @@ class SingleLogController < ApplicationController
   end
 
   private
-  # Gets numeric input, loops until user inputs only an integer value
+  #
+  # Checks validity of magic item update params
+  #
+  def validate_magic_item_params(params, magicItems)
+    errors = []
+    magicItems.each do |item|
+      unless isNumericVal params[:finish_quest_input][item.name]
+        errors << "Input tp increase must be numeric"
+      end
+    end
+    return errors
+  end
+
+  private
+  # checks if input value is strictly an integer
   def isIntVal(val)
     /((\d)+)/.match(val) && !/((\d)+\.(\d)+)/.match(val)
   end
 
   private
-  # Gets numeric input, loops until user inputs a float or integer value
+  # checks if input value is numeric either float or integer
   def isNumericVal(val)
     /((\d)+)/.match(val) || /((\d)+\.(\d)+)/.match(val)
   end
@@ -117,10 +140,11 @@ class SingleLogController < ApplicationController
   #
   # builds and returns an array of log strings to be output
   #
-  def buildLogStrings(params, character)
+  def buildLogStrings(quest, character, params, magic_items)
     strings = []
-    strings << buildLevelUpString(params, character)
-    strings << buildGpString(params, character)
+    strings << buildLevelUpString(quest, character)
+    buildTpLogStrings(params, magic_items, strings)
+    strings << buildGpString(quest, character)
     return strings
   end
 
@@ -153,7 +177,6 @@ class SingleLogController < ApplicationController
     end
   end
 
-  private
   #
   # Builds a string which describes how much gp was gained on a quest
   #
@@ -162,8 +185,23 @@ class SingleLogController < ApplicationController
             now has a total of #{character.gp} GP"
   end
 
-  private
   #
+  # builds tp related strings and updates character_magic_items model
+  #
+  def buildTpLogStrings(params, magicItems, logs)
+    magicItems.each do |item|
+      characterMagicItem = CharacterMagicItem.find_by_magic_item_id item.id
+      addedTp = params[:finish_quest_input][item.name]
+      currentTp = characterMagicItem.applied_tp
+      neededTp = item.tp
+      if addedTp > 0.0
+        currentTp += addedTp
+        if currentTp >= neededTp
+          logs << generateItemFinishedLog(item, addedTp, neededTp )
+        end
+      end
+    end
+  end
   # Updates a and saves a character model to reflect quest values
   #
   def updateCharacterWithQuest(quest, character, totalCP, newLevel)
@@ -173,5 +211,26 @@ class SingleLogController < ApplicationController
     character.save
   end
 
+  #
+  # returns an error if total TP exceeds quest tp
+  #
+  def getTpErrors(quest, totalTp)
+    error = nil
+    unless quest.tp >= (totalTp - 0.001)
+      error = "Added tp cannot exceed tp gained on quest"
+    end
+    return error
+  end
+
+  #
+  # returns total tp based on form input
+  #
+  def getTotalTp(params, magicItems)
+    total = 0
+    magicItems.each do |item|
+      total += params[:finish_quest_input][item.name].to_f
+    end
+    return total
+  end
 
 end
