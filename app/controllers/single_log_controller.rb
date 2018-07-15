@@ -65,6 +65,10 @@ class SingleLogController < ApplicationController
     @quest = Quest.find(params[:quest])
   end
 
+  def set_magic_items
+    @magic_items = @character.magic_items
+  end
+
   def set_quest_params (questModel)
     questModel.tp = form_params[:questTpGained].to_f
     questModel.cp = form_params[:questCpGained].to_f
