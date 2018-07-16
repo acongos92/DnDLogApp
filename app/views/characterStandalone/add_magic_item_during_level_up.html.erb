@@ -1,0 +1,23 @@
+<p class="h2">Hi <%= @character.name %>, Looks Like you gained too much TP, that's ok, lets get a new item</p>
+
+<form id="magicItemSelectForm", action="<%= polymorphic_url(:purchase_magic_item_during_quest, :id => @character.id, :quest => @quest.id)%>" method="post"><%= token_tag %>
+
+  <div class="form-group">
+    <div class="form-control">
+      <label for="magic_item">Input Magic Item Name</label>
+      <input list="magicItemDropdown" id="magic_item" name="magic_item">
+      <small id="magic_item_help" class="form-text text-muted">This is an auto fill list, just start typing</small>
+    </div>
+  </div>
+    <datalist id="magicItemDropdown">
+      <% @magic_items.each do |item| %>
+        <option value="<%= item.name %> || <%= item.tp %> TP">
+      <% end %>
+    </datalist>
+
+
+  <div class="actions">
+    <input type="submit" class="btn btn-primary" value="Add Item">
+  </div>
+
+</form>

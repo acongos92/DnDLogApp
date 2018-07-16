@@ -2,15 +2,16 @@
 
 <form id="magicItemSelectForm", action="<%= url_for(:purchase_magic_item_transaction) %>" method="post"><%= token_tag %>
 
-  <div class="list-group">
+  <div class="form-control">
+    <label for="magic_item">Input Magic Item Name</label>
     <input list="magicItemDropdown" id="magic_item" name="magic_item">
-  </div>
+    <small id="magic_item_help" class="form-text text-muted">This is an auto fill list, just start typing</small>
     <datalist id="magicItemDropdown">
       <% @magic_items.each do |item| %>
         <option value="<%= item.name %> || <%= item.tp %> TP">
       <% end %>
     </datalist>
-
+  </div>
 
   <div class="actions">
     <input type="submit" class="btn btn-primary" value="Add Item">

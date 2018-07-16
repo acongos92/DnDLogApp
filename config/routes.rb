@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   post 'single_log/:id/:quest/generate' => 'single_log#generate', as: :generate_log
   get 'single_log/:id/:quest/tp_info' => 'single_log#show_magic_item_tp_addition', as: :show_magic_item_tp_addition
   post 'single_log/:id/validate' => 'single_log#validate_and_save_quest', as: :validate_and_save_quest
+  get 'single_log/:id/:quest/new_magic_item' => 'single_log#add_magic_item_during_level_up', as: :add_magic_item_during_level_up
+  post 'single_log/:id/:quest/post_magic_item' => 'single_log#post_magic_item_during_level_up', as: :purchase_magic_item_during_quest
 
   #
   # Standard Item Purchase Routes

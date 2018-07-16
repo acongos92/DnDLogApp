@@ -1,6 +1,7 @@
 class SingleLogController < ApplicationController
   before_action :set_character
-  before_action :set_quest, only: [:generate, :add_magic_item_during_level_up, :add_tp_to_magic_itm, :show_magic_item_tp_addition]
+  before_action :set_quest, only: [:generate, :add_magic_item_during_level_up, :add_tp_to_magic_itm,
+                                   :show_magic_item_tp_addition, :add_magic_item_during_level_up, :post_magic_item_during_level_up]
   before_action :set_magic_items, only:[:show_magic_item_tp_addition, :add_tp_to_magic_item, :generate]
 
   include LogHelper
@@ -33,14 +34,26 @@ class SingleLogController < ApplicationController
   # handles adding new magic item to character during quest logs
   #
   def add_magic_item_during_level_up
-
+    @magic_items = MagicItem.all
+    render 'characterStandalone/add_magic_item_during_level_up'
   end
-  
-  #
-  # handles post request logic around tp addition to magic item
-  #
-  def add_tp_to_magic_item
 
+  def post_magic_item_during_level_up
+    @magic_item = MagicItem.where(name: get_item_name(params[:magic_item]))[0]
+    if @magic_item.nil?
+      flash[:error] = "Please use one of the autofill options"
+      @magic_items = MagicItem.all
+      render 'characterStandalone/add_magic_item_during_level_up'
+    else
+      @character = Character.find(params[:id])
+      association = CharacterMagicItem.new
+      association.character_id = params[:id]
+      association.magic_item_id = @magic_item.id
+      association.applied_tp = 0
+      association.save
+      flash[:notice] = "Item Added Succesfully!"
+      redirect_to action: :show_magic_item_tp_addition, id: @character.id, quest: @quest.id
+    end
   end
 
   #
@@ -253,6 +266,15 @@ class SingleLogController < ApplicationController
       total += params[:finish_quest_input][item.name].to_f
     end
     return total
+  end
+
+  def get_item_name(item)
+    arr = item.split(" || ")
+    return arr[0]
+  end
+
+  def get_item_tp(item)
+    return item.split(" || ")[1]
   end
 
 end

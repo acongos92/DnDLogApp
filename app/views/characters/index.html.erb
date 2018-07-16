@@ -10,7 +10,9 @@
       <th scope="col">Level</th>
       <th scope="col">CP</th>
       <th scope="col">GP</th>
-      <th colspan="3"></th>
+      <th scope="col">Add Items and Quests</th>
+      <th scope="col">Delete Character</th>
+      <th colspan="7"></th>
     </tr>
   </thead>
 
@@ -22,9 +24,8 @@
         <td><%= character.level %></td>
         <td><%= character.cp %></td>
         <td><%= character.gp %></td>
-        <td><%= link_to 'View Details', character %></td>
-        <td><%= link_to 'Edit', edit_character_path(character) %></td>
-        <td><%= link_to 'Destroy', character, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'View Details', character, :class => 'badge badge-light' %></td>
+        <td><%= link_to 'Destroy', character, :class => 'badge badge-danger', method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
