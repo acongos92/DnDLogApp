@@ -143,7 +143,7 @@ class SingleLogController < ApplicationController
   def buildLogStrings(quest, character, params, magic_items)
     strings = []
     strings << buildLevelUpString(quest, character)
-    buildTpLogStrings(params, magic_items, strings)
+    buildTpLogStrings(params, magic_items, strings, character.name, quest)
     strings << buildGpString(quest, character)
     return strings
   end
@@ -188,19 +188,41 @@ class SingleLogController < ApplicationController
   #
   # builds tp related strings and updates character_magic_items model
   #
-  def buildTpLogStrings(params, magicItems, logs)
-    magicItems.each do |item|
-      characterMagicItem = CharacterMagicItem.find_by_magic_item_id item.id
-      addedTp = params[:finish_quest_input][item.name]
-      currentTp = characterMagicItem.applied_tp
-      neededTp = item.tp
-      if addedTp > 0.0
-        currentTp += addedTp
-        if currentTp >= neededTp
-          logs << generateItemFinishedLog(item, addedTp, neededTp )
+  def buildTpLogStrings(params, magicItems, logs, characterName, quest)
+
+      logs << "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward"
+      magicItems.each do |item|
+        addedTp = params[:finish_quest_input][item.name].to_f
+        characterMagicItem = CharacterMagicItem.find_by_magic_item_id item.id
+        currentTp = characterMagicItem.applied_tp
+        neededTp = item.tp
+        if addedTp > 0.0
+          currentTp += addedTp
+          if currentTp >= neededTp
+            characterMagicItem.delete
+            logs << generateItemFinishedLog(item, addedTp, neededTp)
+          else
+            characterMagicItem.applied_tp = currentTp
+            characterMagicItem.save
+            logs << generateItemPartiallyFinishedLog(item, addedTp, currentTp, neededTp)
+          end
         end
       end
-    end
+  end
+
+  #
+  # generates a log to reflect that an item has been completed by the characted
+  # completed defined as applying an amount of tp equal or greater than required tp
+  #
+  def generateItemFinishedLog(item, addedTp, neededTp)
+    "#{item.name} (#{neededTp}/#{neededTp}) and completes the item!"
+  end
+
+  #
+  # generates a log to reflect an item had tp applied, but that item was not completed
+  #
+  def generateItemPartiallyFinishedLog(item, addedTp, totalTp, neededTp)
+    "#{item.name} (#{totalTp}/#{neededTp})"
   end
   # Updates a and saves a character model to reflect quest values
   #
