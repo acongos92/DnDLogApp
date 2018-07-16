@@ -50,14 +50,16 @@
   <thead>
   <tr>
     <th scope="col">Name</th>
-    <th scope="col">Cost</th>
+    <th scope="col">Applied TP</th>
+    <th scope="col">Required TP</th>
   </tr>
   </thead>
   <tbody>
-<% @magicItems.each do |item| %>
+<% @character_magic_items.each do |item| %>
   <tr>
-    <td><%= item.name %></td>
-    <td><%= item.tp %></td>
+    <td><%= item.magic_item.name %></td>
+    <td><%= item.applied_tp %></td>
+    <td><%= item.magic_item.tp %></td>
   </tr>
 <% end %>
   </tbody>

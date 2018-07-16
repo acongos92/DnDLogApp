@@ -12,6 +12,7 @@ class CharactersController < ApplicationController
   def show
     @items = @character.items
     @magicItems = @character.magic_items
+    @character_magic_items = CharacterMagicItem.where(character_id: @character.id).all
   end
 
   # GET /characters/new
