@@ -205,7 +205,8 @@ class SingleLogController < ApplicationController
   #
   def buildTpLogStrings(params, magicItems, logs, characterName, quest)
 
-      logs << "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward"
+
+       logString = "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward "
       magicItems.each do |item|
         addedTp = params[:finish_quest_input][item.name].to_f
         characterMagicItem = CharacterMagicItem.find_by_magic_item_id item.id
@@ -214,15 +215,16 @@ class SingleLogController < ApplicationController
         if addedTp > 0.0
           currentTp += addedTp
           if currentTp >= neededTp
-            characterMagicItem.delete
-            logs << generateItemFinishedLog(item, addedTp, neededTp)
+            characterMagicItem.destroy
+            logString = logString + generateItemFinishedLog(item, addedTp, neededTp)
           else
             characterMagicItem.applied_tp = currentTp
             characterMagicItem.save
-            logs << generateItemPartiallyFinishedLog(item, addedTp, currentTp, neededTp)
+            logString = logString +  generateItemPartiallyFinishedLog(item, addedTp, currentTp, neededTp)
           end
         end
       end
+       logs << logString
   end
 
   #
@@ -230,14 +232,14 @@ class SingleLogController < ApplicationController
   # completed defined as applying an amount of tp equal or greater than required tp
   #
   def generateItemFinishedLog(item, addedTp, neededTp)
-    "#{item.name} (#{neededTp}/#{neededTp}) and completes the item!"
+    "#{item.name} (#{neededTp}/#{neededTp}) and completes the item! "
   end
 
   #
   # generates a log to reflect an item had tp applied, but that item was not completed
   #
   def generateItemPartiallyFinishedLog(item, addedTp, totalTp, neededTp)
-    "#{item.name} (#{totalTp}/#{neededTp})"
+    "#{item.name} (#{totalTp}/#{neededTp}) "
   end
   # Updates a and saves a character model to reflect quest values
   #
