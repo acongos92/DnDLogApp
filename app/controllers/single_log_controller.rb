@@ -67,6 +67,7 @@ class SingleLogController < ApplicationController
   # log generation controller method
   #
   def generate
+    @character_magic_items = CharacterMagicItem.all
     errors = validate_magic_item_params(params, @magic_items)
     spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @magic_items))
     if errors.empty? && spent_too_much_tp.nil?
@@ -74,7 +75,6 @@ class SingleLogController < ApplicationController
       render 'characterStandalone/logPage'
     else
       spent_too_much_tp.nil? ? flash[:error] = errors[0] : flash[:error] = spent_too_much_tp
-      @character_magic_items = CharacterMagicItem.all
       render 'characterStandalone/add_tp_to_magic_item'
     end
 
