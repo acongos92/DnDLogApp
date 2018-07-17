@@ -67,7 +67,8 @@ class SingleLogController < ApplicationController
   # log generation controller method
   #
   def generate
-    @character_magic_items = CharacterMagicItem.all
+    @character_magic_items = @character.character_magic_items
+    print @character_magic_items
     errors = validate_magic_item_params(params, @magic_items)
     spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @magic_items))
     if errors.empty? && spent_too_much_tp.nil?
