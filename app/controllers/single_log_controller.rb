@@ -170,7 +170,7 @@ class SingleLogController < ApplicationController
   def buildLevelUpString(quest, character)
     leveledUp = false
     newLevel = character.level
-    totalCP = quest.tp + character.cp
+    totalCP = quest.cp + character.cp
     if character.level < 20
       while doesLevelUp?(totalCP, newLevel)
         leveledUp = true
