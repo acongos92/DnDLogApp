@@ -74,6 +74,7 @@ class SingleLogController < ApplicationController
       render 'characterStandalone/logPage'
     else
       spent_too_much_tp.nil? ? flash[:error] = errors[0] : flash[:error] = spent_too_much_tp
+      @character_magic_items = CharacterMagicItem.all
       render 'characterStandalone/add_tp_to_magic_item'
     end
 
