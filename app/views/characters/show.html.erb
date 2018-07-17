@@ -38,8 +38,8 @@
   <tbody>
 <% @items.each do |item| %>
     <tr>
-      <td><%=item.name %></td>
-      <td><%=item.cost %></td>
+      <td><%=item.item.name %></td>
+      <td><%=item.item.cost %></td>
       <td><%= link_to 'Remove Item', remove_owned_item_path(item.id),  :class => 'badge badge-danger', method: :delete,  data: { confirm: 'This will remove item from your inventory, are you sure?' } %></td>
     </tr>
 <% end %>

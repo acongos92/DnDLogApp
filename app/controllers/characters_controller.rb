@@ -10,12 +10,10 @@ class CharactersController < ApplicationController
   # GET /characters/1
   # GET /characters/1.json
   def show
-    @items = @character.items
+    @items = @character.character_items
     @magicItems = @character.magic_items
     @character_magic_items = @character.character_magic_items
-    @character_magic_items.each do |item|
-      puts item.id
-    end
+
   end
 
   def remove_owned_magic_item
@@ -30,7 +28,7 @@ class CharactersController < ApplicationController
     item = CharacterItem.find(params[:id])
     character = Character.find(item.character_id)
     item.destroy
-    flash[:notic] = "Item Removed"
+    flash[:notice] = "Item Removed"
     redirect_to character
   end
   # GET /characters/new

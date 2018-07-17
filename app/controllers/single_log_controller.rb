@@ -171,23 +171,28 @@ class SingleLogController < ApplicationController
     leveledUp = false
     newLevel = character.level
     totalCP = quest.tp + character.cp
-    while doesLevelUp?(totalCP, newLevel)
-      leveledUp = true
-      newLevel += 1
-      if newLevel > 6
-        totalCP -= 8
-      else
-        totalCP -= 4
+    if character.level < 20
+      while doesLevelUp?(totalCP, newLevel)
+        leveledUp = true
+        newLevel += 1
+        if newLevel > 6
+          totalCP -= 8
+        else
+          totalCP -= 4
+        end
       end
-    end
-    updateCharacterWithQuest(quest, character, totalCP, newLevel)
-    if leveledUp
-      return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
-              levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
-              to level #{newLevel + 1})"
+      updateCharacterWithQuest(quest, character, totalCP, newLevel)
+      if leveledUp
+        return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
+                levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
+                to level #{newLevel + 1})"
+      else
+        return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
+                remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"
+      end
     else
-      return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
-              remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"
+      updateCharacterWithQuest(quest, character, totalCP, newLevel)
+      return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and and is level 20"
     end
   end
 
