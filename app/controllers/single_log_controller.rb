@@ -68,11 +68,10 @@ class SingleLogController < ApplicationController
   #
   def generate
     @character_magic_items = @character.character_magic_items
-    print @character_magic_items
     errors = validate_magic_item_params(params, @magic_items)
     spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @magic_items))
     if errors.empty? && spent_too_much_tp.nil?
-      @logs = buildLogStrings(@quest, @character, params, @magic_items)
+      @logs = buildLogStrings(@quest, @character, params, @character_magic_items)
       render 'characterStandalone/logPage'
     else
       spent_too_much_tp.nil? ? flash[:error] = errors[0] : flash[:error] = spent_too_much_tp
@@ -155,10 +154,10 @@ class SingleLogController < ApplicationController
   #
   # builds and returns an array of log strings to be output
   #
-  def buildLogStrings(quest, character, params, magic_items)
+  def buildLogStrings(quest, character, params, character_magic_items)
     strings = []
     strings << buildLevelUpString(quest, character)
-    buildTpLogStrings(params, magic_items, strings, character.name, quest)
+    buildTpLogStrings(params, character_magic_items, strings, character.name, quest)
     strings << buildGpString(quest, character)
     return strings
   end
@@ -203,24 +202,23 @@ class SingleLogController < ApplicationController
   #
   # builds tp related strings and updates character_magic_items model
   #
-  def buildTpLogStrings(params, magicItems, logs, characterName, quest)
+  def buildTpLogStrings(params, characterMagicItems, logs, characterName, quest)
 
-
-       logString = "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward "
-      magicItems.each do |item|
-        addedTp = params[:finish_quest_input][item.name].to_f
-        characterMagicItem = CharacterMagicItem.find_by_magic_item_id item.id
-        currentTp = characterMagicItem.applied_tp
-        neededTp = item.tp
+      logString = "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward "
+      characterMagicItems.each do |item|
+        magicItem = MagicItem.find(item.magic_item_id)
+        addedTp = params[:finish_quest_input][magicItem.name].to_f
+        currentTp = item.applied_tp
+        neededTp = magicItem.tp
         if addedTp > 0.0
           currentTp += addedTp
           if currentTp >= neededTp
-            characterMagicItem.destroy
-            logString = logString + generateItemFinishedLog(item, addedTp, neededTp)
+            item.destroy
+            logString = logString + generateItemFinishedLog(magicItem, addedTp, neededTp)
           else
-            characterMagicItem.applied_tp = currentTp
-            characterMagicItem.save
-            logString = logString +  generateItemPartiallyFinishedLog(item, addedTp, currentTp, neededTp)
+            item.applied_tp = currentTp
+            item.save
+            logString = logString +  generateItemPartiallyFinishedLog(magicItem, addedTp, currentTp, neededTp)
           end
         end
       end

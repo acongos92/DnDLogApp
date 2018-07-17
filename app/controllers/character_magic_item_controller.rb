@@ -11,7 +11,6 @@ class CharacterMagicItemController < ApplicationController
   def buy
     @magic_item = MagicItem.where(name: get_item_name(params[:magic_item]))[0]
     @character = Character.find(params[:id])
-    puts @character
     if @magic_item.nil?
       flash[:error] = "Please use one of the autofill options"
       @magic_items = MagicItem.all
