@@ -13,7 +13,7 @@
       <%= form.text_field 'applied tp', :class => "form-control", :required => true, :readonly => true, :value => item.applied_tp %>
       <%= form.label 'add TP to item'%>
       <%= form.text_field item.magic_item.name, :required => true, :value => '0.0',  :class => "form-control" %>
-          </div>
+    </div>
   <% end %>
   <%= form.submit 'Done Adding TP, Generate Logs', :class => 'btn btn-outline-dark' %>
 <% end %>

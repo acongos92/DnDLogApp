@@ -213,8 +213,9 @@ class SingleLogController < ApplicationController
         if addedTp > 0.0
           currentTp += addedTp
           if currentTp >= neededTp
-            item.destroy
             logString = logString + generateItemFinishedLog(magicItem, addedTp, neededTp)
+            item.applied_tp = currentTp
+            item.save
           else
             item.applied_tp = currentTp
             item.save
