@@ -32,6 +32,7 @@
   <tr>
     <th scope="col">Name</th>
     <th scope="col">Cost</th>
+    <th scope="col">Remove Item</th>
   </tr>
   </thead>
   <tbody>
@@ -39,6 +40,7 @@
     <tr>
       <td><%=item.name %></td>
       <td><%=item.cost %></td>
+      <td><%= link_to 'Remove Item', remove_owned_item_path(item.id),  :class => 'badge badge-danger', method: :delete,  data: { confirm: 'This will remove item from your inventory, are you sure?' } %></td>
     </tr>
 <% end %>
   </tbody>
@@ -52,6 +54,7 @@
     <th scope="col">Name</th>
     <th scope="col">Applied TP</th>
     <th scope="col">Required TP</th>
+    <th scope="col">Remove Item</th>
   </tr>
   </thead>
   <tbody>
@@ -60,6 +63,7 @@
     <td><%= item.magic_item.name %></td>
     <td><%= item.applied_tp %></td>
     <td><%= item.magic_item.tp %></td>
+    <td><%= link_to 'Remove Item', remove_owned_magic_item_path(item.id),  :class => 'badge badge-danger', method: :delete,  data: { confirm: 'This will remove item, and any applied TP, are you sure?' } %></td>
   </tr>
 <% end %>
   </tbody>

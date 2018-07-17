@@ -12,9 +12,27 @@ class CharactersController < ApplicationController
   def show
     @items = @character.items
     @magicItems = @character.magic_items
-    @character_magic_items = CharacterMagicItem.where(character_id: @character.id).all
+    @character_magic_items = @character.character_magic_items
+    @character_magic_items.each do |item|
+      puts item.id
+    end
   end
 
+  def remove_owned_magic_item
+    item = CharacterMagicItem.find(params[:id])
+    character = Character.find(item.character_id)
+    item.destroy
+    flash[:notice] = "Item Removed"
+    redirect_to character
+  end
+
+  def remove_owned_item
+    item = CharacterItem.find(params[:id])
+    character = Character.find(item.character_id)
+    item.destroy
+    flash[:notic] = "Item Removed"
+    redirect_to character
+  end
   # GET /characters/new
   def new
     @character = Character.new

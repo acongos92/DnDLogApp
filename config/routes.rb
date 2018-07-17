@@ -7,6 +7,11 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  #
+  # character inventory management routes
+  #
+  delete 'character_magic_items/:id' => 'characters#remove_owned_magic_item', as: :remove_owned_magic_item
+  delete 'character_item/:id' => 'characters#remove_owned_item', as: :remove_owned_item
   # You can have the root of your site routed with "root"
   root 'characters#index', as: :home
   get 'single_log/:id/display' => 'single_log#display', as: :new_quest
