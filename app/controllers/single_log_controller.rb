@@ -259,8 +259,12 @@ class SingleLogController < ApplicationController
   #
   def getTpErrors(quest, totalTp)
     error = nil
-    unless quest.tp >= (totalTp - 0.001)
+    unless quest.tp >= (totalTp - 0.1)
       error = "Added tp cannot exceed tp gained on quest"
+    end
+
+    if totalTp <= quest.tp - 0.1
+      error = "you must spend all tp"
     end
     return error
   end
