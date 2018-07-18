@@ -9,6 +9,7 @@ class SingleLogController < ApplicationController
   # form display
   #
   def display()
+    @quest = Quest.new
     render 'characterStandalone/form'
   end
 
@@ -16,20 +17,20 @@ class SingleLogController < ApplicationController
   # checks validity of quest and saves, or displays errors to user
   #
   def validate_and_save_quest
-    errors = validate_params(form_params)
-    if errors.empty?
-      quest = Quest.new
-      set_quest_params(quest)
-      quest.save
-      redirect_to action: :show_magic_item_tp_addition, id: @character.id, quest: quest.id
+    @quest = Quest.new(form_params)
+    if @quest.save && tp_in_range(@quest)
+      set_quest_params(@quest)
+      redirect_to action: :show_magic_item_tp_addition, id: @character.id, quest: @quest.id
     else
-      errors.each do |error|
-        flash[:error] = error
-      end
+      @errors = @quest.errors
+      flash[:notice] = "cp value cannot exceed tp"
       render 'characterStandalone/form'
     end
   end
 
+  def tp_in_range(quest)
+    return quest.tp.to_f <= quest.cp.to_f
+  end
   #
   # handles adding new magic item to character during quest logs
   #
@@ -93,10 +94,10 @@ class SingleLogController < ApplicationController
   end
 
   def set_quest_params(questModel)
-    questModel.tp = form_params[:questTpGained].to_f
-    questModel.cp = form_params[:questCpGained].to_f
-    questModel.name = form_params[:questName]
-    questModel.gp = form_params[:questGpGained].to_f
+    questModel.tp = form_params[:tp].to_f
+    questModel.cp = form_params[:cp].to_f
+    questModel.name = form_params[:name]
+    questModel.gp = form_params[:gp].to_f
   end
 
 
@@ -105,24 +106,9 @@ class SingleLogController < ApplicationController
   # get sanitized params
   #
   def form_params
-    params.require(:generate_log).permit(:questName, :questCpGained, :questTpGained, :questGpGained)
+    params.require(:quest).permit(:name, :cp, :tp, :gp)
   end
 
-  private
-  #
-  # checks validity of parameter input, assumes all are present
-  #
-  def validate_params(params)
-    errors = []
-    if !isNumericVal(params[:questCpGained])
-      errors << "quest cp gained needed should be numeric value"
-    elsif !isNumericVal(params[:questTpGained])
-      errors << "quest tp gained needed should be numeric value"
-    elsif !isNumericVal(params[:questGpGained])
-      errors << "quest gp gained needed should be numeric value"
-    end
-    return errors
-  end
 
   private
   #

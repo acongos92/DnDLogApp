@@ -1,20 +1,31 @@
 <p class="h2">Hi <%= @character.name %>, Lets get your quest info</p>
-<%= form_for :generate_log, url: :validate_and_save_quest do |form| %>
+<%= form_for @quest, url: :validate_and_save_quest, method: :post do |form| %>
+  <% if !@errors.nil? && @errors.any? %>
+    <div class="form-group">
+      <h2><%= pluralize(@errors.count, "error") %> prohibited this quest from being saved:</h2>
+
+      <ul>
+        <% @errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
   <div class ="form-group">
-    <%= form.label :questName, 'Enter the quest name'%>
-    <%= form.text_field :questName, :class => "form-control", :required => true %>
+    <%= form.label :name, 'Enter the quest name'%>
+    <%= form.text_field :name, :class => "form-control", :required => true %>
   </div>
   <div class ="form-group">
-    <%= form.label :questCpGained, 'Enter CP gained on quest' %>
-    <%= form.text_field :questCpGained, :class => "form-control", :required => true %>
+    <%= form.label :cp, 'Enter CP gained on quest' %>
+    <%= form.text_field :cp, :class => "form-control", :required => true %>
   </div>
   <div class ="form-group">
-    <%= form.label :questTpGained, 'Enter TP gained on quest' %>
-    <%= form.text_field :questTpGained, :class => "form-control", :required => true %>
+    <%= form.label :tp, 'Enter TP gained on quest' %>
+    <%= form.text_field :tp, :class => "form-control", :required => true %>
   </div>
   <div class ="form-group">
-    <%= form.label :questGpGained, 'Enter GP gained on quest' %>
-    <%= form.text_field :questGpGained, :class => "form-control", :required => true %>
+    <%= form.label :gp, 'Enter GP gained on quest' %>
+    <%= form.text_field :gp, :class => "form-control", :required => true %>
   </div>
   <%= form.submit 'Generate Log', :class => "btn btn-primary" %>
 <% end  %>

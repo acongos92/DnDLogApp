@@ -3,6 +3,7 @@
 
 
 <%= form_for :finish_quest_input, url: :generate_log do |form| %>
+
   <% @character_magic_items.each do |item| %>
     <div class ="form-group">
       <%= form.label 'item name' %>
