@@ -68,11 +68,9 @@
 <% end %>
   </tbody>
 </table>
-<% if @magicItems.length >= 6 %>
-  <p>You Have Six Magic Items and wont be able to add more</p>
-<% else %>
-  <%= link_to 'Add New', :purchase_magic_item_form, :id => @character.id, :class => "btn btn-outline-dark" %>
-<% end %>
+
+<%= link_to 'Add New', :purchase_magic_item_form, :id => @character.id, :class => "btn btn-outline-dark" %>
+
 
 <%= link_to 'Back', characters_path, :class => "btn btn-outline-dark" %>
 

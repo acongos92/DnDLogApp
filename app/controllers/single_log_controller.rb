@@ -191,7 +191,7 @@ class SingleLogController < ApplicationController
                 remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"
       end
     else
-      updateCharacterWithQuest(quest, character, totalCP, newLevel)
+      updateCharacterWithQuest(quest, character, 0, newLevel)
       return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and and is level 20"
     end
   end

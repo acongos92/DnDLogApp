@@ -17,8 +17,7 @@
   <% end %>
   <%= form.submit 'Done Adding TP, Generate Logs', :class => 'btn btn-outline-dark' %>
 <% end %>
-<% if @character_magic_items.length < 6 %>
-  <%= link_to 'Need Additional Magic Items', :add_magic_item_during_level_up, id: @character.id, quest: @quest.id, :class => "btn btn-outline-dark" %>
-<% end %>
+
+<%= link_to 'Need Additional Magic Items', :add_magic_item_during_level_up, id: @character.id, quest: @quest.id, :class => "btn btn-outline-dark" %>
 
 
