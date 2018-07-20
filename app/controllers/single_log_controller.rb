@@ -70,8 +70,8 @@ class SingleLogController < ApplicationController
   #
   def generate
     @character_magic_items = @character.character_magic_items
-    errors = validate_magic_item_params(params, @magic_items)
-    spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @magic_items))
+    errors = validate_magic_item_params(params, @character_magic_items)
+    spent_too_much_tp = getTpErrors(@quest, getTotalTp(params, @character_magic_items))
     if errors.empty? && spent_too_much_tp.nil?
       @logs = buildLogStrings(@quest, @character, params, @character_magic_items)
       render 'characterStandalone/logPage'
@@ -118,8 +118,10 @@ class SingleLogController < ApplicationController
   def validate_magic_item_params(params, magicItems)
     errors = []
     magicItems.each do |item|
-      unless isNumericVal params[:finish_quest_input][item.name]
-        errors << "Input tp increase must be numeric"
+      if item.applied_tp < item.magic_item.tp
+        unless isNumericVal params[:finish_quest_input][item.magic_item.name]
+          errors << "Input tp increase must be numeric"
+        end
       end
     end
     return errors
@@ -203,20 +205,22 @@ class SingleLogController < ApplicationController
 
       logString = "#{characterName} also gains #{quest.tp} TP from #{quest.name} and puts it toward "
       characterMagicItems.each do |item|
-        magicItem = MagicItem.find(item.magic_item_id)
-        addedTp = params[:finish_quest_input][magicItem.name].to_f
-        currentTp = item.applied_tp
-        neededTp = magicItem.tp
-        if addedTp > 0.0
-          currentTp += addedTp
-          if currentTp >= neededTp
-            logString = logString + generateItemFinishedLog(magicItem, addedTp, neededTp)
-            item.applied_tp = currentTp
-            item.save
-          else
-            item.applied_tp = currentTp
-            item.save
-            logString = logString +  generateItemPartiallyFinishedLog(magicItem, addedTp, currentTp, neededTp)
+        if item.applied_tp < item.magic_item.tp
+          magicItem = MagicItem.find(item.magic_item_id)
+          addedTp = params[:finish_quest_input][magicItem.name].to_f
+          currentTp = item.applied_tp
+          neededTp = magicItem.tp
+          if addedTp > 0.0
+            currentTp += addedTp
+            if currentTp >= neededTp
+              logString = logString + generateItemFinishedLog(magicItem, addedTp, neededTp)
+              item.applied_tp = currentTp
+              item.save
+            else
+              item.applied_tp = currentTp
+              item.save
+              logString = logString +  generateItemPartiallyFinishedLog(magicItem, addedTp, currentTp, neededTp)
+            end
           end
         end
       end
@@ -264,10 +268,12 @@ class SingleLogController < ApplicationController
   #
   # returns total tp based on form input
   #
-  def getTotalTp(params, magicItems)
+  def getTotalTp(params, characterMagicItems)
     total = 0
-    magicItems.each do |item|
-      total += params[:finish_quest_input][item.name].to_f
+    characterMagicItems.each do |item|
+      if item.applied_tp < item.magic_item.tp
+        total += params[:finish_quest_input][item.magic_item.name].to_f
+      end
     end
     return total
   end
