@@ -169,9 +169,14 @@ class SingleLogController < ApplicationController
       end
       updateCharacterWithQuest(quest, character, totalCP, newLevel)
       if leveledUp
-        return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
-                levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
-                to level #{newLevel + 1})"
+        if newLevel < 20
+          return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
+                  levels up to level #{newLevel}!! (#{totalCP}/#{getCpNeeded(newLevel)}
+                  to level #{newLevel + 1})"
+        else
+          return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
+                  levels up to level #{newLevel}!!"
+        end
       else
         return "#{character.name} gains #{quest.cp} CP from **#{quest.name}** and
                 remains level #{character.level} (#{totalCP}/#{getCpNeeded(character.level)})"

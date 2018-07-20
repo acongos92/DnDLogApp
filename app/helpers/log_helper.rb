@@ -4,9 +4,9 @@ module LogHelper
   # gets cp needed for next level
   #
   def getCpNeeded(level)
-    if level <= 5
+    if level < 5
       needed = 4
-    elsif level > 5
+    elsif level >= 5
       needed = 8
     else
       needed = nil
