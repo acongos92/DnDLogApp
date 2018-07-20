@@ -17,7 +17,8 @@
 
 
   <div class="actions">
-    <input type="submit" class="btn btn-primary" value="Add Item">
+    <input type="submit" class="btn btn-outline-dark" value="Add Item" >
   </div>
-
 </form>
+
+<%= link_to 'Nevermind, Back to quest page', :show_magic_item_tp_addition, :id => @character.id, :quest => @quest.id, :class => "btn btn-outline-dark" %>

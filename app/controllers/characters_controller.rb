@@ -4,7 +4,7 @@ class CharactersController < ApplicationController
   # GET /characters
   # GET /characters.json
   def index
-    @characters = Character.all
+    @characters = Character.all.order(:name)
   end
 
   # GET /characters/1
@@ -75,7 +75,8 @@ class CharactersController < ApplicationController
   def destroy
     @character.destroy
     respond_to do |format|
-      format.html { redirect_to characters_url, notice: 'Character was successfully destroyed.' }
+      flash[:notice] = "Character was removed"
+      format.html { redirect_to characters_url }
       format.json { head :no_content }
     end
   end
