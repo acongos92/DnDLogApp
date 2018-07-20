@@ -232,14 +232,14 @@ class SingleLogController < ApplicationController
   # completed defined as applying an amount of tp equal or greater than required tp
   #
   def generateItemFinishedLog(item, addedTp, neededTp)
-    "#{item.name} (#{neededTp}/#{neededTp}) and completes the item! "
+    "**#{item.name}** (#{neededTp}/#{neededTp}) and completes the item! "
   end
 
   #
   # generates a log to reflect an item had tp applied, but that item was not completed
   #
   def generateItemPartiallyFinishedLog(item, addedTp, totalTp, neededTp)
-    "#{item.name} (#{totalTp}/#{neededTp}) "
+    "**#{item.name}** (#{totalTp}/#{neededTp}) "
   end
   # Updates a and saves a character model to reflect quest values
   #
