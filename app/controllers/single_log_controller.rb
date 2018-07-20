@@ -3,6 +3,7 @@ class SingleLogController < ApplicationController
   before_action :set_quest, only: [:generate, :add_magic_item_during_level_up, :add_tp_to_magic_itm,
                                    :show_magic_item_tp_addition, :add_magic_item_during_level_up, :post_magic_item_during_level_up]
   before_action :set_magic_items, only:[:show_magic_item_tp_addition, :add_tp_to_magic_item, :generate]
+  before_filter :set_cache_headers, only:[:post_magic_item_during_level_up, :generate, :validate_and_save_quest]
 
   include LogHelper
   #

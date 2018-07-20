@@ -1,9 +1,7 @@
 class CharacterMagicItemController < ApplicationController
 
   def show
-    @magic_items = MagicItem.all
-    @magic_items.sort.reverse!
-
+    @magic_items = MagicItem.all.order(:name)
     @character = Character.find(params[:id])
     render 'character_magic_item/form'
   end

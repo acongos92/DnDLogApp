@@ -44,12 +44,15 @@ class CharactersController < ApplicationController
   # POST /characters.json
   def create
     @character = Character.new(character_params)
-
     respond_to do |format|
-      if @character.save
+      if @character.valid? && is_in_level_range?(@character)
+        @character.save
         format.html { redirect_to @character, notice: 'Character was successfully created.' }
         format.json { render :show, status: :created, location: @character }
       else
+        if @character.valid?
+          flash[:error] = "Max CP for a level 4 or below character is 3" unless is_in_level_range?(@character)
+        end
         format.html { render :new }
         format.json { render json: @character.errors, status: :unprocessable_entity }
       end
@@ -82,6 +85,7 @@ class CharactersController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_character
       @character = Character.find(params[:id])
@@ -91,4 +95,12 @@ class CharactersController < ApplicationController
     def character_params
       params.require(:character).permit(:name, :race, :level, :cp, :gp)
     end
+
+  def is_in_level_range? (character)
+    range = true
+    if character.level < 5
+      range = character.cp < 4
+    end
+    return range
+  end
 end

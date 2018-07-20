@@ -1,7 +1,7 @@
 <%= form_for(character) do |f| %>
   <% if character.errors.any? %>
     <div class="form-group">
-      <h2><%= pluralize(character.errors.count, "error") %> prohibited this character from being saved:</h2>
+      <h2><%= pluralize(character.errors.count, "error") %> prohibited this character from being created</h2>
 
       <ul>
       <% character.errors.full_messages.each do |message| %>
